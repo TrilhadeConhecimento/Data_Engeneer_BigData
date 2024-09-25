@@ -1,132 +1,131 @@
-# Big Data Sandbox
-For Portuguese version, click [here](README-pt-br.md)
+## Apache Zeppelin
 
-This project aims to provide a sandbox environment for big data testing. It consists of a Docker environment with several containers containing:
+### 1. Pré-requisitos do Lab
 
-```mermaid
-classDiagram
-    class Zeppelin {
-        Porta: 8080
-    }
-    class HiveServer {
-        Porta: 10000
-        Porta: 10002
-    }
-    class Metastore {   
-        Porta: 9083
-    }
-    class LivySpark {
-        Porta: 8998
-        Porta: 18080
-        
-    }
-    class PostgreSQL {
-        Porta: 5432
-    }
-    class MinIO {
-        Porta: 9000
-        Porta: 9001
-    }
+- **Docker Preparado**: Certifique-se de que o Docker está instalado e em funcionamento.
+- **Java JDK**: Instale o Java Development Kit (JDK) 8 ou superior.
+- **Tecnologias Adjacentes e suas Versões**:
+  - Apache Zeppelin: 0.9.0
+  - Docker: Compatível com seu sistema operacional
+  - Java JDK: 8 ou superior
+- **Dados Mocks**: Prepare conjuntos de dados de teste que serão utilizados nos notebooks do Zeppelin.
+- **Emulação de Network**: Configuração de rede que simule um ambiente de produção.
+- **Chocolatey**: Certifique-se de que todos os pré-requisitos necessários estão liberados no nosso chocolatey, como:
+  - openjdk8
+  - docker
 
-    Zeppelin <--> LivySpark
-    LivySpark <--> Metastore: 
-    LivySpark <--> MinIO: 
-    MinIO <--> HiveServer: 
-    Metastore <--> PostgreSQL: 
-    Metastore <--> HiveServer: 
-```  
+### 2. Como Fazer o Setup
 
-### In this diagram:
+#### Variáveis de Ambiente
 
-- **Zeppelin (Zeppelin)**: Zeppelin is an interactive notebook tool for data analysis, similar to Jupyter Notebook. It supports multiple programming languages such as Scala, Python, SQL, and R, allowing the creation of graphs, tables, and interactive visualizations directly in the notebook.
-
-- **Livy-Spark (Livy-Spark)**: Livy is a server for interacting with Apache Spark clusters remotely. It allows users to submit Spark tasks (such as large-scale data processing) via a REST API, facilitating the execution of Spark jobs in distributed environments.
-
-- **Metastore (Metastore)**: Metastore is part of the Apache Hive ecosystem, used to store metadata for Hive tables. It manages information such as table schemas, data locations, and other important properties for Hive queries and operations.
-
-- **HiveServer (HiveServer)**: HiveServer is a server that provides JDBC and Thrift interfaces for SQL queries in a Hive cluster. It allows external applications, such as Business Intelligence tools and other programs, to connect to Hive and execute SQL queries for data analysis stored in Hadoop.
-
-- **PostgreSQL (PostgreSQL)**: PostgreSQL is an open-source relational database management system (RDBMS). It is known for its reliability, advanced SQL features, ACID transaction support, and extensibility, widely used in applications requiring a robust and scalable database.
-
-- **MinIO (MinIO)**: MinIO is an open-source object storage server compatible with Amazon S3 (Simple Storage Service). It is designed to be scalable, high-performance, and suitable for cloud storage workloads, enabling efficient storage and retrieval of large amounts of unstructured data.
-
-These containers are configured to communicate with each other, allowing for big data processing tasks.
-
-### Access the port links
- Access the services at the following links:
-- Zeppelin: 
-    - [8080](http://localhost:8080): user interface
-- Livy-Spark: 
-    - [18080](http://localhost:18080): History Server user interface
-    - [8998](http://localhost:8998): Livy Server user interface
-- MinIO: 
-    - 9000: MinIO 
-    - [9001](http://localhost:9001): user interface
-- Metastore:
-    - 9083: Metastore
-- HiveServer:
-     - [10002](http://localhost:10002): user interface
-     - 10000: HiveServer
-- Postgre:
-    - 5432: PostgreSQL
-
-## Summary
-
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
-- [Developers](#developers)
-
-## Requirements
-
-Before installing and running this project, ensure that your system meets the following requirements:
-
-- Docker installed and properly configured.
-- Sufficient disk space for containers and generated data.
-- Internet connection to download Docker images and dependencies during the initial setup.
-
-## Installation
-
-Follow the steps below to install the project:
-
-1. Clone this repository to your local environment.
-
-```bash 
-git clone https://github.com/Estagio-ADS-1-2024/bigdata-docker.git
-```
-
-2. Navigate to the project directory.
+Adicione as seguintes variáveis de ambiente:
 
 ```bash
-cd bigdata-docker
+export ZEPPELIN_PORT=8080
+export JAVA_HOME=/path/to/java
+export PATH=$PATH:$JAVA_HOME/bin
 ```
 
-3. Run the Docker initialization command.
+#### Especificação de Portas
+
+- **Zeppelin**: 8080
+
+#### Inicialização
+
+Baixe e execute o Docker container do Zeppelin:
 
 ```bash
-docker compose up --build
+docker pull apache/zeppelin:0.9.0
+docker run -d -p 8080:8080 --name zeppelin apache/zeppelin:0.9.0
 ```
 
-## Configuration
+### 3. Descrição dos Passos do Lab
 
-After installation, the environment will be automatically configured. You can access the following services:
+#### Objetivo do Lab
 
-- MinIO: [http://localhost:9001](http://localhost:9000)
-- Zeppelin: [http://localhost:8080](http://localhost:8080)
+Configurar e utilizar o Apache Zeppelin para criar e compartilhar relatórios baseados em dados.
 
-## Troubleshooting
+#### Passo a Passo
 
-If the services are not functioning as expected, follow these troubleshooting steps:
+1. **Preparar Ambiente**:
 
-1. Ensure that Docker is running.
-2. Check the container logs for error messages.
-3. Restart the containers using the `docker compose restart` command.
+   - **Instalação do Docker**:
 
-## Developers
+     - No Windows: Utilize o Chocolatey para instalar o Docker.
+       ```bash
+       choco install docker-desktop
+       ```
+     - No Linux: Siga as instruções da distribuição para instalar o Docker.
+       ```bash
+       sudo apt-get update
+       sudo apt-get install docker-ce docker-ce-cli containerd.io
+       ```
+     - No macOS: Utilize o Homebrew para instalar o Docker.
+       ```bash
+       brew cask install docker
+       ```
 
-This project is maintained by:
+   - **Configuração do Java JDK**:
+     - Baixe e instale o JDK 8 ou superior.
+     - Configure a variável de ambiente `JAVA_HOME` para apontar para a instalação do JDK.
+     - Adicione o diretório `bin` do JDK ao `PATH`.
 
-- Erick M. Cassoli - [GitHub](https://github.com/ErickCassoli)
-- Vinicius Antunes - [GitHub](https://github.com/viniciusantunes26)
-- Rafael Mattos - [GitHub](https://github.com/RafaMattss)
+2. **Configurar Zeppelin**:
+
+   - **Definição de Variáveis de Ambiente**:
+
+     - Configure a variável de ambiente `ZEPPELIN_PORT` para especificar a porta em que o Zeppelin será executado.
+     - Certifique-se de que o `JAVA_HOME` está configurado corretamente.
+
+   - **Verificação da Especificação de Portas**:
+     - Garanta que a porta 8080 está disponível e não está sendo usada por outros serviços.
+
+3. **Inicializar Zeppelin**:
+
+   - **Baixar e Executar o Docker Container**:
+     - Utilize o comando Docker para baixar a imagem do Zeppelin e iniciar o container.
+     ```bash
+     docker pull apache/zeppelin:0.9.0
+     docker run -d -p 8080:8080 --name zeppelin apache/zeppelin:0.9.0
+     ```
+   - **Verificar a Inicialização**:
+     - Verifique se o container está em execução utilizando o comando:
+     ```bash
+     docker ps
+     ```
+
+4. **Criar Notebooks**:
+   - **Acesso à Interface Web do Zeppelin**:
+     - Abra um navegador e acesse `http://localhost:8080`.
+   - **Criação de Notebooks**:
+     - Clique em "Create new note" para criar um novo notebook.
+     - Dê um nome ao notebook e selecione o interpretador (por exemplo, Apache Spark) a ser utilizado.
+   - **Execução de Códigos e Visualizações**:
+     - Insira comandos e scripts nos diferentes blocos do notebook e execute-os.
+     - Utilize as funcionalidades de visualização de dados do Zeppelin para criar gráficos e tabelas interativas.
+   - **Compartilhamento de Notebooks**:
+     - Utilize a funcionalidade de compartilhamento para permitir que outros usuários acessem e colaborem nos notebooks criados.
+
+### 4. Resultados Esperados
+
+- **Ambiente Zeppelin Funcionando**: O Apache Zeppelin deve estar acessível na porta 8080.
+- **Criação e Compartilhamento de Notebooks**:
+  - Capacidade de criar notebooks interativos.
+  - Visualização de dados através de gráficos e tabelas.
+  - Compartilhamento de notebooks com outros usuários para colaboração.
+- **Integração com Outras Ferramentas da Sandbox**:
+  - Conectividade e interação com outras ferramentas como Apache Hive, Apache Spark, e MinIO, permitindo a execução de consultas e scripts que envolvam múltiplas tecnologias.
+  - Capacidade de utilizar dados armazenados no MinIO, executar jobs no Apache Spark, e consultar tabelas no Apache Hive diretamente a partir do Zeppelin.
+  - Implementação de workflows complexos que integrem diferentes componentes da sandbox, demonstrando a flexibilidade e interoperabilidade do Zeppelin.
+
+---
+
+### 5. Fale Comigo
+
+- **Nome**: Vinicius Antunes Silva
+- **Email**: vinicius.antunes@2rpnet.com
+- **GitHub**: https://github.com/viniciusantunes26
+
+---
+
+Se precisar de mais alguma coisa ou de outra ferramenta, por favor, me avise!
